@@ -5,7 +5,7 @@ description = "Instala fontes no Linux sem complicações (GTK3 + Fontconfig)"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-authors = [{ name = "FontEasy Contributors" }]
+authors = [{ name = "silenciosiquela", email = "silenciosiquela@gmail.com" }]
 keywords = ["fonts", "gtk", "linux", "fontconfig"]
 dependencies = [
     "PyGObject>=3.42",

@@ -38,7 +38,7 @@ Section: utils
 Priority: optional
 Architecture: all
 Depends: python3, python3-gi, gir1.2-gtk-3.0, fontconfig, xdg-utils
-Maintainer: FontEasy Contributors <fonteasy@example.com>
+Maintainer: silenciosiquela <silenciosiquela@gmail.com>
 Description: Instala fontes no Linux sem complicações
  Escolhe ficheiros .ttf/.otf/.ttc/.otc, pré-visualiza a família e o
  estilo via Fontconfig e instala em ~/.local/share/fonts.
