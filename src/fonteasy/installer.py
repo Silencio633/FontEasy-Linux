@@ -1,6 +1,6 @@
-"""Lógica de instalação de fontes (sem dependência do GTK).
+"""Font installation logic (no GTK dependency).
 
-Separada da interface para ser testável com pytest e reutilizável.
+Kept separate from the UI so it can be tested with pytest and reused.
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ from fonteasy.font_validator import SUPPORTED_EXTENSIONS, test_font
 
 
 def get_default_font_dir() -> Path:
-    """Diretoria de fontes do utilizador (freedesktop.org)."""
+    """User font directory (freedesktop.org)."""
     return Path.home() / ".local" / "share" / "fonts"
 
 
@@ -30,12 +30,12 @@ class InstallResult:
 
 
 def validate_source(source: str | Path) -> tuple[bool, str]:
-    """Valida um ficheiro candidato (extensão, tamanho, conteúdo)."""
+    """Validate a candidate file (extension, size, contents)."""
     return test_font(source)
 
 
 def refresh_font_cache(font_dir: Path) -> tuple[bool, str]:
-    """Corre `fc-cache -f` para a diretoria. Retorna (ok, mensagem)."""
+    """Run `fc-cache -f` for the directory. Returns (ok, message)."""
     try:
         subprocess.run(
             ["fc-cache", "-f", str(font_dir)],
@@ -45,15 +45,15 @@ def refresh_font_cache(font_dir: Path) -> tuple[bool, str]:
             timeout=60,
         )
     except FileNotFoundError:
-        return False, "O comando fc-cache não está instalado (pacote fontconfig)."
+        return False, "The fc-cache command is not installed (fontconfig package)."
     except subprocess.TimeoutExpired:
-        return False, "O fc-cache excedeu o tempo limite (60s)."
+        return False, "fc-cache timed out (60s)."
     except subprocess.CalledProcessError as exc:
         detail = (exc.stderr or exc.stdout or str(exc)).strip()
-        return False, f"fc-cache falhou: {detail}"
+        return False, "fc-cache failed: {}".format(detail)
     except OSError as exc:
-        return False, f"Falha ao executar fc-cache: {exc}"
-    return True, "Cache de fontes atualizada."
+        return False, "Failed to run fc-cache: {}".format(exc)
+    return True, "Font cache refreshed."
 
 
 def install_font_files(
@@ -61,13 +61,13 @@ def install_font_files(
     font_dir: Path | None = None,
     refresh_cache: bool = True,
 ) -> InstallResult:
-    """Copia fontes validadas para ``font_dir``.
+    """Copy validated fonts into ``font_dir``.
 
-    - Rejeita symlinks, diretórios e formatos não suportados.
-    - Valida o conteúdo com ``fc-scan`` antes de copiar.
-    - Nunca sobrescreve: destinos existentes são reportados em ``skipped``.
-    - Usa o nome base do ficheiro (sem componentes de diretoria),
-      o que impede path traversal.
+    - Rejects symlinks, directories and unsupported formats.
+    - Validates contents with ``fc-scan`` before copying.
+    - Never overwrites: existing destinations are reported in ``skipped``.
+    - Uses only the file's base name (no directory components),
+      which prevents path traversal.
     """
     target = Path(font_dir) if font_dir is not None else get_default_font_dir()
     result = InstallResult()
@@ -76,16 +76,18 @@ def install_font_files(
         target.mkdir(parents=True, exist_ok=True)
     except OSError as exc:
         for source in sources:
-            result.errors.append(f"{Path(source).name}: não foi possível criar {target}: {exc}")
+            result.errors.append(
+                "{}: could not create {}: {}".format(Path(source).name, target, exc)
+            )
         return result
 
     for raw in sources:
         source = Path(raw)
-        name = source.name  # sanitizado: sem diretórios
+        name = source.name  # sanitized: no directories
 
         ok, info = validate_source(source)
         if not ok:
-            result.errors.append(f"{name}: {info}")
+            result.errors.append("{}: {}".format(name, info))
             continue
 
         destination = target / name
@@ -96,7 +98,7 @@ def install_font_files(
             shutil.copy2(source, destination)
             result.installed.append(name)
         except OSError as exc:
-            result.errors.append(f"{name}: {exc}")
+            result.errors.append("{}: {}".format(name, exc))
 
     if result.installed and refresh_cache:
         cache_ok, cache_msg = refresh_font_cache(target)

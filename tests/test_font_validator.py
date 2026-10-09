@@ -45,13 +45,13 @@ def test_unsupported_extension(tmp_path):
     f.write_text("hello")
     ok, msg = _test_font(f)
     assert not ok
-    assert "não suportado" in msg.lower() or "suportado" in msg.lower()
+    assert "nsupported" in msg.lower()
 
 
 def test_missing_file(tmp_path):
     ok, msg = _test_font(tmp_path / "ausente.ttf")
     assert not ok
-    assert "não existe" in msg.lower()
+    assert "does not exist" in msg.lower()
 
 
 def test_symlink_rejected(tmp_path):
@@ -61,7 +61,7 @@ def test_symlink_rejected(tmp_path):
     link.symlink_to(SYSTEM_FONT)
     ok, msg = _test_font(link)
     assert not ok
-    assert "simbólica" in msg.lower()
+    assert "ymbolic" in msg.lower()
 
 
 def test_empty_file_rejected(tmp_path):
@@ -69,7 +69,7 @@ def test_empty_file_rejected(tmp_path):
     f.write_bytes(b"")
     ok, msg = _test_font(f)
     assert not ok
-    assert "vazio" in msg.lower()
+    assert "empty" in msg.lower()
 
 
 def test_corrupt_file_rejected(tmp_path):
@@ -77,7 +77,7 @@ def test_corrupt_file_rejected(tmp_path):
     f.write_bytes(b"isto nao e uma fonte" * 100)
     ok, msg = _test_font(f)
     assert not ok
-    assert "fontconfig" in msg.lower() or "analisar" in msg.lower()
+    assert "ontconfig" in msg.lower() or "parse" in msg.lower()
 
 
 def test_size_limit(monkeypatch, tmp_path):
@@ -86,7 +86,7 @@ def test_size_limit(monkeypatch, tmp_path):
     f.write_bytes(b"x" * 11)
     ok, msg = _test_font(f)
     assert not ok
-    assert "limite" in msg.lower()
+    assert "limit" in msg.lower()
 
 
 @needs_font

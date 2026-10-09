@@ -1,10 +1,9 @@
-"""FontEasy — instala fontes no Linux sem complicações (GTK3)."""
+"""FontEasy — install fonts on Linux the easy way (GTK3)."""
 
 from __future__ import annotations
 
 import gettext
 import locale
-import subprocess
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 from urllib.request import url2pathname
@@ -15,13 +14,13 @@ gi.require_version("Gdk", "3.0")
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gdk, Gtk  # noqa: E402
 
-from fonteasy import __app_id__, __version__  # noqa: E402
+from fonteasy import __version__  # noqa: E402, F401
 from fonteasy import installer  # noqa: E402
 from fonteasy.installer import get_default_font_dir  # noqa: E402
 
 # ---------------------------------------------------------------------------
-# i18n: por agora os textos estão em pt-PT; a infraestrutura gettext fica
-# pronta para futuras traduções (pasta locale/ + ficheiros .po).
+# i18n: UI strings default to English (Flathub requirement); gettext stays
+# ready for translations (locale/ + .po files, e.g. pt-PT).
 # ---------------------------------------------------------------------------
 try:
     locale.setlocale(locale.LC_ALL, "")
@@ -47,7 +46,7 @@ class FontEasy(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
 
         self.selected_files: list[Path] = []
-        self.file_labels: dict[str, str] = {}  # nome -> "Família — Estilo"
+        self.file_labels: dict[str, str] = {}  # name -> "Family — Style"
 
         layout = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=12)
         self.add(layout)
@@ -56,7 +55,7 @@ class FontEasy(Gtk.Window):
         title.set_markup("<span size='xx-large' weight='bold'>FontEasy</span>")
         layout.pack_start(title, False, False, 0)
 
-        subtitle = Gtk.Label(label=_("Instala as tuas fontes no Linux sem complicações."))
+        subtitle = Gtk.Label(label=_("Install your fonts on Linux the easy way."))
         subtitle.set_line_wrap(True)
         layout.pack_start(subtitle, False, False, 0)
 
@@ -70,7 +69,7 @@ class FontEasy(Gtk.Window):
         self._enable_drag_and_drop(scroll)
 
         self.status = Gtk.Label(
-            label=_("Seleciona ficheiros .TTF, .OTF, .TTC ou .OTC (ou arrasta-os para aqui).")
+            label=_("Select .TTF, .OTF, .TTC or .OTC files (or drag them here).")
         )
         self.status.set_line_wrap(True)
         layout.pack_start(self.status, False, False, 0)
@@ -78,24 +77,24 @@ class FontEasy(Gtk.Window):
         buttons = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         layout.pack_start(buttons, False, False, 0)
 
-        choose_button = Gtk.Button(label=_("Escolher fontes"))
+        choose_button = Gtk.Button(label=_("Choose fonts"))
         choose_button.connect("clicked", self.choose_fonts)
         buttons.pack_start(choose_button, True, True, 0)
 
-        clear_button = Gtk.Button(label=_("Limpar"))
+        clear_button = Gtk.Button(label=_("Clear"))
         clear_button.connect("clicked", self.clear_selection)
         buttons.pack_start(clear_button, True, True, 0)
 
-        install_button = Gtk.Button(label=_("Instalar fontes"))
+        install_button = Gtk.Button(label=_("Install fonts"))
         install_button.get_style_context().add_class("suggested-action")
         install_button.connect("clicked", self.install_fonts)
         buttons.pack_start(install_button, True, True, 0)
 
-        folder_button = Gtk.Button(label=_("Abrir pasta de fontes"))
+        folder_button = Gtk.Button(label=_("Open font folder"))
         folder_button.connect("clicked", self.open_font_folder)
         buttons.pack_start(folder_button, True, True, 0)
 
-    # -- diálogos ---------------------------------------------------------
+    # -- dialogs ----------------------------------------------------------
     def show_message(self, message: str, error: bool = False):
         dialog = Gtk.MessageDialog(
             transient_for=self,
@@ -119,7 +118,7 @@ class FontEasy(Gtk.Window):
         dialog.destroy()
         return response == Gtk.ResponseType.YES
 
-    # -- seleção ----------------------------------------------------------
+    # -- selection ----------------------------------------------------------
     def _enable_drag_and_drop(self, widget: Gtk.Widget):
         target = Gtk.TargetEntry.new("text/uri-list", 0, 0)
         widget.drag_dest_set(
@@ -139,18 +138,18 @@ class FontEasy(Gtk.Window):
 
     def choose_fonts(self, _button):
         dialog = Gtk.FileChooserDialog(
-            title=_("Selecionar fontes"),
+            title=_("Select fonts"),
             parent=self,
             action=Gtk.FileChooserAction.OPEN,
         )
         dialog.add_buttons(
-            _("Cancelar"), Gtk.ResponseType.CANCEL,
-            _("Selecionar"), Gtk.ResponseType.ACCEPT,
+            _("Cancel"), Gtk.ResponseType.CANCEL,
+            _("Select"), Gtk.ResponseType.ACCEPT,
         )
         dialog.set_select_multiple(True)
 
         file_filter = Gtk.FileFilter()
-        file_filter.set_name(_("Ficheiros de fontes"))
+        file_filter.set_name(_("Font files"))
         for extension in sorted(SUPPORTED_EXTENSIONS):
             file_filter.add_pattern(f"*{extension}")
             file_filter.add_pattern(f"*{extension.upper()}")
@@ -161,7 +160,7 @@ class FontEasy(Gtk.Window):
         dialog.destroy()
 
     def add_files(self, candidates: list[Path]):
-        """Valida com fc-scan e adiciona apenas fontes reais."""
+        """Validate with fc-scan and add only real fonts."""
         added, invalid, duplicated = 0, [], 0
         known = {p.resolve() if p.exists() else p for p in self.selected_files}
 
@@ -172,7 +171,7 @@ class FontEasy(Gtk.Window):
                 continue
             ok, info = installer.validate_source(candidate)
             if not ok:
-                invalid.append(f"{candidate.name}: {info}")
+                invalid.append("{}: {}".format(candidate.name, info))
                 continue
             self.selected_files.append(candidate)
             self.file_labels[candidate.name] = info
@@ -183,16 +182,16 @@ class FontEasy(Gtk.Window):
 
         parts = []
         if added:
-            parts.append(_(f"{added} fonte(s) adicionada(s)."))
+            parts.append(_("{} font(s) added.").format(added))
         if duplicated:
-            parts.append(_(f"{duplicated} já estava(m) na lista."))
+            parts.append(_("{} already in the list.").format(duplicated))
         if invalid:
-            parts.append(_(f"{len(invalid)} ficheiro(s) inválido(s) — ver detalhes."))
-        self.status.set_text(" ".join(parts) if parts else _("Nenhum ficheiro novo."))
+            parts.append(_("{} invalid file(s) — see details.").format(len(invalid)))
+        self.status.set_text(" ".join(parts) if parts else _("No new files."))
 
         if invalid:
             self.show_message(
-                _("Os seguintes ficheiros foram ignorados:\n\n") + "\n".join(invalid),
+                _("The following files were skipped:\n\n") + "\n".join(invalid),
                 error=True,
             )
 
@@ -200,16 +199,16 @@ class FontEasy(Gtk.Window):
         self.selected_files = [p for p in self.selected_files if p != file_path]
         self.file_labels.pop(file_path.name, None)
         self.refresh_list()
-        self.status.set_text(_(f"{len(self.selected_files)} fonte(s) na lista."))
+        self.status.set_text(_("{} font(s) in the list.").format(len(self.selected_files)))
 
     def clear_selection(self, _button=None):
         if not self.selected_files:
             return
-        if self.confirm(_("Limpar a lista de fontes selecionadas?")):
+        if self.confirm(_("Clear the selected font list?")):
             self.selected_files = []
             self.file_labels = {}
             self.refresh_list()
-            self.status.set_text(_("Lista limpa."))
+            self.status.set_text(_("List cleared."))
 
     def refresh_list(self):
         for child in self.list_box.get_children():
@@ -227,19 +226,20 @@ class FontEasy(Gtk.Window):
             label = Gtk.Label(xalign=0)
             label.set_hexpand(True)
             if info:
-                # escape manual para evitar injeção de Pango Markup
+                # manual escaping to avoid Pango markup injection
                 import html
 
                 label.set_markup(
-                    f"<b>{html.escape(file_path.name)}</b>\n"
-                    f"<small>{html.escape(info)}</small>"
+                    "<b>{}</b>\n<small>{}</small>".format(
+                        html.escape(file_path.name), html.escape(info)
+                    )
                 )
             else:
                 label.set_text(file_path.name)
             box.pack_start(label, True, True, 0)
 
             remove = Gtk.Button(label="✕")
-            remove.set_tooltip_text(_("Remover da lista"))
+            remove.set_tooltip_text(_("Remove from the list"))
             remove.connect("clicked", lambda _b, p=file_path: self.remove_file(p))
             box.pack_start(remove, False, False, 0)
 
@@ -248,11 +248,11 @@ class FontEasy(Gtk.Window):
 
         self.list_box.show_all()
 
-    # -- instalação --------------------------------------------------------
+    # -- installation -------------------------------------------------------
     def install_fonts(self, _button):
         if not self.selected_files:
             self.show_message(
-                _("Primeiro, seleciona pelo menos uma fonte."),
+                _("First, select at least one font."),
                 error=True,
             )
             return
@@ -260,10 +260,10 @@ class FontEasy(Gtk.Window):
         font_dir = get_default_font_dir()
         result = installer.install_font_files(list(self.selected_files), font_dir)
 
-        # Mantém na lista apenas o que falhou, para permitir nova tentativa.
+        # Keep only failures in the list so the user can retry.
         failed_names = set()
         for err in result.errors:
-            # erros de cache não têm prefixo de ficheiro
+            # cache errors carry no file prefix
             name = err.split(":", 1)[0].strip()
             if name.endswith(tuple(SUPPORTED_EXTENSIONS)) or "." in name:
                 failed_names.add(name)
@@ -281,22 +281,22 @@ class FontEasy(Gtk.Window):
         self.refresh_list()
 
         self.status.set_text(
-            _(f"Instaladas: {len(result.installed)} | "
-              f"Ignoradas: {len(result.skipped)} | "
-              f"Erros: {len(result.errors)}")
+            _("Installed: {} | Skipped: {} | Errors: {}").format(
+                len(result.installed), len(result.skipped), len(result.errors)
+            )
         )
 
         report = [
-            _(f"Fontes instaladas: {len(result.installed)}"),
-            _(f"Fontes já existentes: {len(result.skipped)}"),
-            _(f"Erros: {len(result.errors)}"),
+            _("Installed fonts: {}").format(len(result.installed)),
+            _("Already existing: {}").format(len(result.skipped)),
+            _("Errors: {}").format(len(result.errors)),
         ]
         if result.installed:
-            report.append(_("\nInstaladas:\n") + "\n".join(result.installed))
+            report.append(_("\nInstalled:\n") + "\n".join(result.installed))
         if result.skipped:
-            report.append(_("\nJá existentes:\n") + "\n".join(result.skipped))
+            report.append(_("\nAlready existing:\n") + "\n".join(result.skipped))
         if result.errors:
-            report.append(_("\nProblemas:\n") + "\n".join(result.errors))
+            report.append(_("\nProblems:\n") + "\n".join(result.errors))
 
         self.show_message("\n".join(report), error=bool(result.errors))
 
@@ -304,14 +304,12 @@ class FontEasy(Gtk.Window):
         folder = get_default_font_dir()
         folder.mkdir(parents=True, exist_ok=True)
         try:
-            subprocess.run(
-                ["xdg-open", str(folder)],
-                check=False,
-                capture_output=True,
-                timeout=10,
+            # Uses the OpenURI portal under Flatpak — no xdg-open needed.
+            Gtk.show_uri_on_window(
+                self, folder.as_uri(), Gtk.get_current_event_time()
             )
-        except (FileNotFoundError, subprocess.TimeoutExpired, OSError) as exc:
-            self.show_message(f"{folder}\n\n{exc}", error=True)
+        except Exception as exc:  # noqa: BLE001 — show any failure to the user
+            self.show_message("{}\n\n{}".format(folder, exc), error=True)
 
 
 def main():

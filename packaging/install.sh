@@ -26,8 +26,8 @@ fi
 
 if [ "$MODE" = "uninstall" ]; then
   rm -rf "$HOME/.local/lib/fonteasy" "$HOME/.local/bin/fonteasy" \
-    "$HOME/.local/share/applications/org.fonteasy.FontEasy.desktop" \
-    "$HOME/.local/share/icons/hicolor/scalable/apps/org.fonteasy.FontEasy.svg"
+    "$HOME/.local/share/applications/io.github.Silencio633.FontEasy.desktop" \
+    "$HOME/.local/share/icons/hicolor/scalable/apps/io.github.Silencio633.FontEasy.svg"
   echo "FontEasy removido de $HOME/.local."
   exit 0
 fi
@@ -48,8 +48,8 @@ exec /usr/bin/python3 -c "import sys; sys.path.insert(0, '$LIBDIR'); from fontea
 EOF
 chmod 755 "$BINDIR/fonteasy"
 
-cp assets/org.fonteasy.FontEasy.desktop "$APPDIR/"
-cp assets/org.fonteasy.FontEasy.svg "$ICONDIR/"
+cp assets/io.github.Silencio633.FontEasy.desktop "$APPDIR/"
+cp assets/io.github.Silencio633.FontEasy.svg "$ICONDIR/"
 
 command -v update-desktop-database >/dev/null 2>&1 && update-desktop-database "$APPDIR" || true
 command -v gtk-update-icon-cache >/dev/null 2>&1 && gtk-update-icon-cache -f -t "$PREFIX/share/icons/hicolor" || true

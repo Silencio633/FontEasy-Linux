@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2026 silenciosiquela -->
+<component type="desktop-application">
+  <id>io.github.Silencio633.FontEasy</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <developer id="io.github.silencio633">
+    <name>silenciosiquela</name>
+  </developer>
+  <name>FontEasy</name>
+  <summary>Install fonts on Linux the easy way</summary>
+  <description>
+    <p>Pick .ttf, .otf, .ttc or .otc files — or drag them into the window —
+    preview their family and style via Fontconfig, and install them into
+    your user font folder with a cache refresh.</p>
+    <p>FontEasy validates every file before copying, never overwrites
+    existing fonts, and reports exactly what was installed, skipped
+    or failed.</p>
+  </description>
+  <launchable type="desktop-id">io.github.Silencio633.FontEasy.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/Silencio633/FontEasy-Linux/v0.2.0/assets/screenshots/fonteasy-main.png</image>
+      <caption>Install fonts with family and style preview</caption>
+    </screenshot>
+  </screenshots>
+  <url type="homepage">https://github.com/Silencio633/FontEasy-Linux</url>
+  <url type="vcs-browser">https://github.com/Silencio633/FontEasy-Linux</url>
+  <url type="bugtracker">https://github.com/Silencio633/FontEasy-Linux/issues</url>
+  <url type="help">https://github.com/Silencio633/FontEasy-Linux#readme</url>
+  <releases>
+    <release version="0.2.0" date="2026-10-09">
+      <url type="details">https://github.com/Silencio633/FontEasy-Linux/releases/tag/v0.2.0</url>
+      <description>
+        <p>First public release: GTK3 font installer with Fontconfig validation, drag-and-drop and user font folder management.</p>
+      </description>
+    </release>
+  </releases>
+  <branding>
+    <color type="primary" scheme_preference="light">#2e6fd8</color>
+    <color type="primary" scheme_preference="dark">#2e6fd8</color>
+  </branding>
+  <requires>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <display_length compare="ge">768</display_length>
+  </requires>
+  <content_rating type="oars-1.1" />
+  <provides>
+    <id>io.github.Silencio633.FontEasy.desktop</id>
+  </provides>
+</component>

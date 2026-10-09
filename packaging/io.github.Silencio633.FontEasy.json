@@ -1,0 +1,37 @@
+{
+	"app-id": "io.github.Silencio633.FontEasy",
+	"runtime": "org.gnome.Platform",
+	"runtime-version": "50",
+	"sdk": "org.gnome.Sdk",
+	"command": "fonteasy",
+	"finish-args": [
+		"--socket=wayland",
+		"--socket=fallback-x11",
+		"--share=ipc",
+		"--filesystem=xdg-data/fonts"
+	],
+	"modules": [
+		{
+			"name": "fonteasy",
+			"buildsystem": "simple",
+			"build-commands": [
+				"python3 -m pip install --verbose --prefix=/app --no-cache-dir --no-deps --no-build-isolation .",
+				"install -Dm644 assets/io.github.Silencio633.FontEasy.desktop -t /app/share/applications/",
+				"install -Dm644 assets/io.github.Silencio633.FontEasy.svg -t /app/share/icons/hicolor/scalable/apps/",
+				"install -Dm644 assets/io.github.Silencio633.FontEasy.metainfo.xml -t /app/share/metainfo/",
+				"install -Dm644 LICENSE -t /app/share/licenses/io.github.Silencio633.FontEasy/fonteasy"
+			],
+			"sources": [
+				{
+					"type": "archive",
+					"url": "https://github.com/Silencio633/FontEasy-Linux/archive/refs/tags/v0.2.0.tar.gz",
+					"sha256": "REPLACE_WITH_V0.2.0_RELEASE_TARBALL_SHA256",
+					"x-checker-data": {
+						"type": "git",
+						"tag-pattern": "^v([\\d.]+)$"
+					}
+				}
+			]
+		}
+	]
+}

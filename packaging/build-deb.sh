@@ -27,9 +27,9 @@ exec /usr/bin/python3 -m fonteasy "$@"
 EOF
 chmod 755 "$PKGDIR/usr/bin/fonteasy"
 
-cp "$ROOT/assets/org.fonteasy.FontEasy.desktop" "$PKGDIR/usr/share/applications/"
-cp "$ROOT/assets/org.fonteasy.FontEasy.svg" "$PKGDIR/usr/share/icons/hicolor/scalable/apps/"
-cp "$ROOT/assets/org.fonteasy.FontEasy.metainfo.xml" "$PKGDIR/usr/share/metainfo/"
+cp "$ROOT/assets/io.github.Silencio633.FontEasy.desktop" "$PKGDIR/usr/share/applications/"
+cp "$ROOT/assets/io.github.Silencio633.FontEasy.svg" "$PKGDIR/usr/share/icons/hicolor/scalable/apps/"
+cp "$ROOT/assets/io.github.Silencio633.FontEasy.metainfo.xml" "$PKGDIR/usr/share/metainfo/"
 
 cat > "$PKGDIR/DEBIAN/control" <<EOF
 Package: fonteasy

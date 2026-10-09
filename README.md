@@ -32,10 +32,10 @@ Gera os artefactos (não requer root):
 |---|---|---|
 | `.deb` | Debian/Ubuntu e derivados | `sudo apt install ./dist/fonteasy_0.2.0-1_all.deb` (traz `python3-gi`, `gir1.2-gtk-3.0`, `fontconfig` como dependências) |
 | `.tar.gz` + `install.sh` | Qualquer distro com Python 3.10+, GTK3 e fontconfig | `tar -xzf fonteasy-0.2.0.tar.gz && cd fonteasy-0.2.0 && ./install.sh` (modo `--user`, sem root; `--system` com root; `--uninstall` remove) |
-| Manifesto Flatpak | Qualquer distro com Flatpak (Flathub) | `flatpak-builder --install build-dir packaging/org.fonteasy.FontEasy.json` (requer `flatpak-builder` + SDK GNOME 45; **build ainda não executado nesta máquina**) |
+| Manifesto Flatpak | Qualquer distro com Flatpak (Flathub) | `flatpak-builder --install build-dir packaging/io.github.Silencio633.FontEasy.json` (requer `flatpak-builder` + SDK GNOME 45; **build ainda não executado nesta máquina**) |
 
 Todos os formatos instalam o lançador `fonteasy`, a entrada de menu
-(`org.fonteasy.FontEasy.desktop`), o ícone e os metadados AppStream.
+(`io.github.Silencio633.FontEasy.desktop`), o ícone e os metadados AppStream.
 
 ## Funcionalidades
 
@@ -67,8 +67,9 @@ python3 -m pytest -q
 
 ## i18n
 
-Textos em pt-PT com infraestrutura `gettext` pronta (`domínio fonteasy`, pasta `locale/`).
-Para traduzir: `xgettext -o locale/fonteasy.pot src/fonteasy/main.py` e criar `locale/<lang>/LC_MESSAGES/fonteasy.po`.
+Textos em inglês por omissão (requisito Flathub) com infraestrutura `gettext` pronta
+(`domínio fonteasy`, pasta `locale/`). Para traduzir, ex. pt-PT:
+`xgettext -o locale/fonteasy.pot src/fonteasy/main.py` e criar `locale/<lang>/LC_MESSAGES/fonteasy.po`.
 
 ## Licença
 

@@ -13,7 +13,7 @@ jobs:
       - name: Instalar dependências de sistema
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-gi gir1.2-gtk-3.0 fontconfig desktop-file-utils
+          sudo apt-get install -y python3-gi gir1.2-gtk-3.0 fontconfig desktop-file-utils appstream
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -26,8 +26,10 @@ jobs:
       - name: Correr testes
         run: python3 -m pytest -q
 
-      - name: Validar .desktop
-        run: desktop-file-validate assets/org.fonteasy.FontEasy.desktop
+      - name: Validar .desktop e metainfo
+        run: |
+          desktop-file-validate assets/io.github.Silencio633.FontEasy.desktop
+          appstreamcli validate --no-net assets/io.github.Silencio633.FontEasy.metainfo.xml
 
       - name: Validar builds (.deb + tarball)
         run: |

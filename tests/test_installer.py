@@ -97,7 +97,7 @@ def test_cache_failure_reported(monkeypatch, tmp_path):
     if real_font is None:
         pytest.skip("sem fonte real")
     monkeypatch.setattr(
-        installer, "refresh_font_cache", lambda _d: (False, "fc-cache simulado falhou")
+        installer, "refresh_font_cache", lambda _d: (False, "simulated fc-cache failure")
     )
     result = install_font_files([real_font], tmp_path / "fonts", refresh_cache=True)
     assert result.installed == [real_font.name]
