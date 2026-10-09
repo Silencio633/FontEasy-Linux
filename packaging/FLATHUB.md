@@ -10,7 +10,7 @@
 | `.desktop` válido | OK |
 | Ícone SVG nomeado pelo ID | OK |
 | Screenshot real no metainfo (via tag, não branch) | OK após push da tag `v0.2.0` |
-| Manifesto `packaging/io.github.Silencio633.FontEasy.json` (runtime GNOME 50, permissões mínimas) | RASCUNHO — falta `sha256` do tarball da release; **requer revisão humana antes de submeter (ver "Nota sobre IA")** |
+| Manifesto `packaging/io.github.Silencio633.FontEasy.json` (runtime GNOME 50, permissões mínimas) | OK — `sha256` da release v0.2.0 preenchido e verificado; **requer revisão humana antes de submeter (ver "Nota sobre IA")** |
 | Permissões: `wayland`, `fallback-x11`, `ipc`, `xdg-data/fonts` | OK (sem `--share=network`; "abrir pasta" usa portal `Gtk.show_uri`) |
 | Release estável com tag (`v0.2.0`) | POR FAZER |
 | Build local testado (`org.flatpak.Builder`) | POR FAZER — sem `flatpak-builder` nesta máquina |

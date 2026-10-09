@@ -25,7 +25,7 @@
 				{
 					"type": "archive",
 					"url": "https://github.com/Silencio633/FontEasy-Linux/archive/refs/tags/v0.2.0.tar.gz",
-					"sha256": "REPLACE_WITH_V0.2.0_RELEASE_TARBALL_SHA256",
+					"sha256": "282c422933304da930b76cc4d642d9d1a8e1c08c3bb6f699c756df6ea3017969",
 					"x-checker-data": {
 						"type": "git",
 						"tag-pattern": "^v([\\d.]+)$"
