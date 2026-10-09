@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+packaging/deb-stage/
+packaging/tarball-stage/
+.venv/
+venv/
+locale/*/LC_MESSAGES/*.mo

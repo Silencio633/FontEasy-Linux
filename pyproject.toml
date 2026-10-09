@@ -1,0 +1,36 @@
+[project]
+name = "fonteasy"
+version = "0.2.0"
+description = "Instala fontes no Linux sem complicações (GTK3 + Fontconfig)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "FontEasy Contributors" }]
+keywords = ["fonts", "gtk", "linux", "fontconfig"]
+dependencies = [
+    "PyGObject>=3.42",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+test = ["pytest>=8"]
+
+[project.scripts]
+fonteasy = "fonteasy.main:main"
+
+[project.urls]
+Homepage = "https://example.com/fonteasy"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar dependências de sistema
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-gi gir1.2-gtk-3.0 fontconfig desktop-file-utils
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências Python
+        run: pip install pytest
+
+      - name: Correr testes
+        run: python3 -m pytest -q
+
+      - name: Validar .desktop
+        run: desktop-file-validate assets/org.fonteasy.FontEasy.desktop
+
+      - name: Validar builds (.deb + tarball)
+        run: |
+          sh packaging/build-deb.sh
+          sh packaging/build-tarball.sh

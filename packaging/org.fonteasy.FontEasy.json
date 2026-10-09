@@ -1,0 +1,38 @@
+{
+  "app-id": "org.fonteasy.FontEasy",
+  "runtime": "org.gnome.Platform",
+  "runtime-version": "45",
+  "sdk": "org.gnome.Sdk",
+  "command": "fonteasy",
+  "finish-args": [
+    "--socket=wayland",
+    "--socket=fallback-x11",
+    "--share=ipc",
+    "--share=network",
+    "--filesystem=xdg-data/fonts",
+    "--talk-name=org.gtk.vfs",
+    "--talk-name=org.freedesktop.Flatpak"
+  ],
+  "modules": [
+    {
+      "name": "fonteasy",
+      "buildsystem": "simple",
+      "build-commands": [
+        "mkdir -p /app/lib/fonteasy /app/bin /app/share/applications /app/share/icons/hicolor/scalable/apps /app/share/metainfo",
+        "cp -r src/fonteasy /app/lib/fonteasy_pkg_tmp",
+        "mkdir -p /app/lib/python3.11/site-packages",
+        "mv /app/lib/fonteasy_pkg_tmp /app/lib/python3.11/site-packages/fonteasy",
+        "install -m755 packaging/fonteasy-flatpak-launcher /app/bin/fonteasy",
+        "install -m644 assets/org.fonteasy.FontEasy.desktop /app/share/applications/",
+        "install -m644 assets/org.fonteasy.FontEasy.svg /app/share/icons/hicolor/scalable/apps/",
+        "install -m644 assets/org.fonteasy.FontEasy.metainfo.xml /app/share/metainfo/"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": ".."
+        }
+      ]
+    }
+  ]
+}

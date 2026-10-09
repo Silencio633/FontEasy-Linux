@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=FontEasy
+Comment=Instala as tuas fontes no Linux sem complicações.
+Exec=fonteasy
+Icon=org.fonteasy.FontEasy
+Terminal=false
+Type=Application
+Categories=Utility;
+Keywords=fonts;fontes;typography;install;
+StartupNotify=true

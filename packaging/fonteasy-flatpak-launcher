@@ -1,0 +1,10 @@
+#!/usr/bin/python3
+"""Launcher dentro do Flatpak (o GNOME SDK já inclui PyGObject)."""
+import sys
+
+sys.path.insert(0, "/app/lib/python3.11/site-packages")
+
+from fonteasy.main import main
+
+if __name__ == "__main__":
+    main()
